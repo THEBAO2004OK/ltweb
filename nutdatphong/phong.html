@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    
+/* Định dạng cho biểu tượng đặt phòng */
+.booking-icon {
+    position: fixed; /* Giữ vị trí cố định */
+    bottom: 20px; /* Cách đáy 20px */
+    right: 20px; /* Cách bên phải 20px */
+    width: 50px; /* Chiều rộng 50px */
+    height: 50px; /* Chiều cao 50px */
+    font-size: 30px; /* Kích thước chữ bên trong icon */
+    background-color: #f8f9fa; /* Màu nền icon */
+    border-radius: 50%; /* Bo tròn icon */
+    display: flex; /* Để canh giữa icon */
+    align-items: center; /* Canh giữa theo chiều dọc */
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+@keyframes shake {
+    0% { transform: translate(0); }
+    25% { transform: translate(-5px, 0); }
+    50% { transform: translate(5px, 0); }
+    75% { transform: translate(-5px, 0); }
+    100% { transform: translate(0); }
+}
+/* Hiệu ứng rung cho icon */
+.booking-icon.shake {
+    animation: shake 0.5s; /* Thời gian rung lắc */
+}
+
+</style>
+<body>
+    <div class="booking-icon" onclick="openBooking()">
+        🛏️
+    </div>
+</body>
+
+<script>
+    function openBooking() {
+    window.location.href = "datphongd.html"; // Thay đổi URL đến trang đặt phòng
+}
+</script>
+</html>
