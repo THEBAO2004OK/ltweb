@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biệt thự hồ bơi</title>
+    <style>
+ /* Định dạng chung cho trang */
+body {
+    font-family: Arial, sans-serif; /* Chọn phông chữ */
+    margin: 24px; /* Khoảng cách lề xung quanh trang */
+    background-color:#fff; /* Màu nền nhạt */
+    color: #333; /* Màu chữ xám đậm */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 25px;
+}
+
+/* Tiêu đề chính */
+h1 {
+    text-align: center; /* Căn giữa tiêu đề */
+    color: #2c3e50; /* Màu xanh đậm cho tiêu đề */
+}
+
+/* Container cho mỗi biệt thự */
+.villa {
+    max-width: 1000px; /* Chiều rộng tối đa của phần chứa biệt thự */
+    background-color: #fff; /* Màu nền trắng */
+    border-radius: 8px; /* Góc bo tròn cho container */
+    padding: 20px; /* Khoảng cách nội dung với viền */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho phần nổi */
+    text-align: center; /* Căn giữa nội dung */
+    margin: 20px auto; /* Khoảng cách giữa các phần biệt thự */
+    transition: transform 0.3s; /* Hiệu ứng chuyển động khi hover */
+}
+
+.villa:hover {
+    transform: translateY(-5px); /* Nâng phần biệt thự lên khi hover */
+}
+
+/* Tiêu đề cho mỗi biệt thự */
+.villa-title {
+    font-size: 24px; /* Kích thước chữ tiêu đề */
+    color: #3498db; /* Màu xanh dương đậm */
+    margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Mô tả biệt thự */
+.villa-description {
+    font-size: 16px; /* Kích thước chữ mô tả */
+    color: #555; /* Màu chữ xám nhạt hơn */
+    text-align: justify; /* Căn đều hai bên cho văn bản */
+    line-height: 1.6; /* Khoảng cách giữa các dòng */
+    margin-top: 10px;
+}
+
+/* Định dạng slider */
+.slider {
+    position: relative; /* Để các nút điều hướng nằm bên trong slider */
+    max-width: 100%; /* Giới hạn chiều rộng slider */
+    overflow: hidden; /* Giấu các phần ảnh nằm ngoài slider */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Chứa các slide ảnh */
+.slides {
+    display: flex; /* Các slide xếp ngang nhau */
+    transition: transform 0.5s ease; /* Hiệu ứng chuyển động khi chuyển slide */
+    width: 100%;
+}
+
+/* Định dạng cho từng slide */
+.slide {
+    min-width: 100%; /* Mỗi slide chiếm hết chiều rộng slider */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Định dạng ảnh trong slide */
+.slide img {
+    width: 100%; /* Ảnh chiếm hết chiều rộng slide */
+    max-width: 1200px; /* Giới hạn kích thước tối đa cho ảnh */
+    height: auto; /* Giữ nguyên tỷ lệ khi ảnh thay đổi kích thước */
+    border-radius: 8px; /* Bo tròn góc ảnh */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Đổ bóng cho ảnh */
+}
+
+/* Nút chuyển slide */
+.button {
+    position: absolute; /* Đặt nút bên trong slider */
+    top: 50%; /* Căn giữa theo chiều dọc */
+    transform: translateY(-50%); /* Giữ nút luôn ở giữa */
+    background-color: rgba(0, 0, 0, 0.5); /* Nền nút mờ màu đen */
+    color: white; /* Màu chữ trắng */
+    border: none; /* Bỏ viền nút */
+    padding: 10px; /* Khoảng cách bên trong nút */
+    cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+    font-size: 18px; /* Kích thước chữ trên nút */
+    border-radius: 50%; /* Bo tròn nút */
+}
+
+.button.prev {
+    left: 10px; /* Đặt nút “quay lại” ở phía bên trái */
+}
+
+.button.next {
+    right: 10px; /* Đặt nút “tiến tới” ở phía bên phải */
+}
+
+/* Định dạng cho biểu tượng đặt phòng */
+.booking-icon {
+    position: fixed; /* Giữ vị trí cố định */
+    bottom: 20px; /* Cách đáy 20px */
+    right: 20px; /* Cách bên phải 20px */
+    width: 50px; /* Chiều rộng 50px */
+    height: 50px; /* Chiều cao 50px */
+    font-size: 30px; /* Kích thước chữ bên trong icon */
+    background-color: #f8f9fa; /* Màu nền icon */
+    border-radius: 50%; /* Bo tròn icon */
+    display: flex; /* Để canh giữa icon */
+    align-items: center; /* Canh giữa theo chiều dọc */
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+@keyframes shake {
+    0% { transform: translate(0); }
+    25% { transform: translate(-5px, 0); }
+    50% { transform: translate(5px, 0); }
+    75% { transform: translate(-5px, 0); }
+    100% { transform: translate(0); }
+}
+
+/* Hiệu ứng rung cho icon */
+.booking-icon.shake {
+    animation: shake 0.5s; /* Thời gian rung lắc */
+}
+
+/* Định dạng cho biểu tượng chatbot */
+.chatbot-icon {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #0078ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s;
+}
+
+.chatbot-icon:hover {
+    background-color: #005bb5;
+}
+
+/* Định dạng khung chatbot */
+.chatbot-box {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    width: 300px;
+    max-height: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: none; /* Ẩn theo mặc định */
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* Đầu khung chatbot */
+.chat-header {
+    background-color: #0078ff;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* Nội dung khung chatbot */
+.chat-body {
+    padding: 10px;
+    height: 250px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+/* Phần nhập tin nhắn trong chatbot */
+.chat-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+}
+
+.chat-input button {
+    padding: 8px 12px;
+    background-color: #0078ff;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+/* can le trai */
+.ok {
+    text-align:left;
+}
+.o{
+    font-size: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <video autoplay loop muted>
+        <source src="AZLRH.mp4" type="audio/mp3">
+        Trình duyệt của bạn không hỗ trợ thẻ audio.
+    </video>
+
+<h1>Biệt thự hồ bơi</h1>
+
+<!-- Biệt thự hồ bơi -->
+<div class="villa">
+    <div class="villa-title">Biệt thự hồ bơi</div>
+    <div class="slider" data-current-slide="0">
+        <div class="slides">
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Swimming-Pool-Framed-By-Nature.jpg" alt="Biệt thự hồ bơi ảnh 1"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Bedroom-And-Daybed.jpg" alt="Biệt thự hồ bơi ảnh 2"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Living-Room-2.jpg" alt="Biệt thự hồ bơi ảnh 3"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Bath.jpg" alt="Biệt thự hồ bơi ảnh 4"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/AZCT.jpg" alt="Biệt thự hồ bơi ảnh 5"></div>
+        </div>
+        <button class="button prev" onclick="changeSlide(-1, this)">&#10094;</button>
+        <button class="button next" onclick="changeSlide(1, this)">&#10095;</button>
+    </div>
+    <p class="villa-description o">
+        Các biệt thự với hồ bơi riêng của khu nghỉ dưỡng có diện tích từ 636m2 (Biệt thự 1 phòng ngủ) đến 669m2 (Biệt thự 2 Phòng ngủ), 702m2 Biệt thự 3 Phòng ngủ và 784m2 (Biệt thự 4 Phòng ngủ) đến 1.583m2 (Biệt thự Mekong), mang đến cho du khách sự riêng tư phong phú cùng với những lợi ích độc đáo khác.
+        <p class="ok"><img src="https://www.shutterstock.com/image-vector/home-icon-vector-house-260nw-1276960063.jpg" alt="Icon" width="30" height="30">26m2</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEFhM2kGpiOiY7SXt6FpUf0B2Dlx26io_VFg&s=" alt="Icon" width="30" height="30">1 Giường cỡ Queen hay 2 Giường đơn</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHFeT36T6OH5HbcOfmvrBIu3-xRq7dZ8P0w&s"alt="Icon" width="30" height="30"> 
+            3 Tối Đa (2 Người Lớn & 1 Trẻ em)</p>
+    </p>
+</div>
+
+<!-- Biệt thự hồ bơi một phòng ngủ -->
+<div class="villa">
+    <div class="villa-title">Biệt thự hồ bơi một phòng ngủ</div>
+    <div class="slider" data-current-slide="0">
+        <div class="slides">
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/AZCT-Pool-900x700-1.jpg" alt="Biệt thự 1 phòng ngủ ảnh 1"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Living-Room-And-Decoration.jpg" alt="Biệt thự 1 phòng ngủ ảnh 2"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Room-Overview.jpg" alt="Biệt thự 1 phòng ngủ ảnh 3"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Bathroom.jpg" alt="Biệt thự 1 phòng ngủ ảnh 4"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Four-Bedrooms.jpg" alt="Biệt thự 1 phòng ngủ ảnh 5"></div>
+        </div>
+        <button class="button prev" onclick="changeSlide(-1, this)">&#10094;</button>
+        <button class="button next" onclick="changeSlide(1, this)">&#10095;</button>
+    </div>
+    <p class="villa-description o">
+        Biệt thự một phòng ngủ rộng 636m2 với hồ bơi riêng, có 1 giường cỡ Queen và sức chứa tối đa 3 người.
+        <p class="ok"><img src="https://www.shutterstock.com/image-vector/home-icon-vector-house-260nw-1276960063.jpg" alt="Icon" width="30" height="30">26m2</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEFhM2kGpiOiY7SXt6FpUf0B2Dlx26io_VFg&s=" alt="Icon" width="30" height="30">1 Giường cỡ Queen hay 2 Giường đơn</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHFeT36T6OH5HbcOfmvrBIu3-xRq7dZ8P0w&s"alt="Icon" width="30" height="30"> 
+            3 Tối Đa (2 Người Lớn & 1 Trẻ em)</p>
+    </p></p>
+</div>
+
+<!-- Biệt thự hồ bơi hai phòng ngủ -->
+<div class="villa">
+    <div class="villa-title">Biệt thự hồ bơi hai phòng ngủ</div>
+    <div class="slider" data-current-slide="0">
+        <div class="slides">
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/AZCT-3BRVillaPool.jpg" alt="Biệt thự 2 phòng ngủ ảnh 1"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Living-Room-3.jpg" alt="Biệt thự 2 phòng ngủ ảnh 2"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Room-Overview-1.jpg" alt="Biệt thự 2 phòng ngủ ảnh 3"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Bathroom-1.jpg" alt="Biệt thự 2 phòng ngủ ảnh 4"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Four-Bedrooms-1.jpg" alt="Biệt thự 2 phòng ngủ ảnh 5"></div>
+        </div>
+        <button class="button prev" onclick="changeSlide(-1, this)">&#10094;</button>
+        <button class="button next" onclick="changeSlide(1, this)">&#10095;</button>
+    </div>
+    <p class="villa-description">
+        Biệt thự hai phòng ngủ rộng 669m2 với hồ bơi riêng, có 1 giường cỡ King và 1 giường cỡ Queen, sức chứa tối đa 5 người.
+        <p class="ok"><img src="https://www.shutterstock.com/image-vector/home-icon-vector-house-260nw-1276960063.jpg" alt="Icon" width="30" height="30">26m2</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEFhM2kGpiOiY7SXt6FpUf0B2Dlx26io_VFg&s=" alt="Icon" width="30" height="30">1 Giường cỡ Queen hay 2 Giường đơn</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHFeT36T6OH5HbcOfmvrBIu3-xRq7dZ8P0w&s"alt="Icon" width="30" height="30"> 
+            3 Tối Đa (2 Người Lớn & 1 Trẻ em)</p>
+    </p></p>
+</div>
+
+<!-- Biệt thự hồ bơi ba phòng ngủ -->
+<div class="villa">
+    <div class="villa-title">Biệt thự hồ bơi ba phòng ngủ</div>
+    <div class="slider" data-current-slide="0">
+        <div class="slides">
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/AZCT-3BRVillaPool.jpg" alt="Biệt thự 3 phòng ngủ ảnh 1"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Living-Room-3.jpg" alt="Biệt thự 3 phòng ngủ ảnh 2"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Garden-Villa-Room-Overview-1.jpg" alt="Biệt thự 3 phòng ngủ ảnh 3"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Bathroom-1.jpg" alt="Biệt thự 3 phòng ngủ ảnh 4"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Four-Bedrooms.jpg" alt="Biệt thự 3 phòng ngủ ảnh 5"></div>
+        </div>
+        <button class="button prev" onclick="changeSlide(-1, this)">&#10094;</button>
+        <button class="button next" onclick="changeSlide(1, this)">&#10095;</button>
+    </div>
+    <p class="villa-description o">
+        Biệt thự ba phòng ngủ rộng 702m2 với hồ bơi riêng, có 2 giường cỡ King và 1 giường cỡ Queen, sức chứa tối đa 7 người.
+        <p class="ok"><img src="https://www.shutterstock.com/image-vector/home-icon-vector-house-260nw-1276960063.jpg" alt="Icon" width="30" height="30">26m2</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEFhM2kGpiOiY7SXt6FpUf0B2Dlx26io_VFg&s=" alt="Icon" width="30" height="30">1 Giường cỡ Queen hay 2 Giường đơn</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHFeT36T6OH5HbcOfmvrBIu3-xRq7dZ8P0w&s"alt="Icon" width="30" height="30"> 
+            3 Tối Đa (2 Người Lớn & 1 Trẻ em)</p>
+    </p></p>
+</div>
+
+<!-- Biệt thự hồ bơi bốn phòng ngủ -->
+<div class="villa">
+    <div class="villa-title">Biệt thự hồ bơi bốn phòng ngủ</div>
+    <div class="slider" data-current-slide="0">
+        <div class="slides">
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-The-Pool-And-Sun-Loungers.jpg" alt="Biệt thự 4 phòng ngủ ảnh 1"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Bathroom-2.jpg" alt="Biệt thự 4 phòng ngủ ảnh 2"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Living-Room.jpg" alt="Biệt thự 4 phòng ngủ ảnh 3"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-Open-Air-Living-room.jpg" alt="Biệt thự 4 phòng ngủ ảnh 4"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-River-Villa-View-from-The-Room.jpg" alt="Biệt thự 4 phòng ngủ ảnh 5"></div>
+        </div>
+        <button class="button prev" onclick="changeSlide(-1, this)">&#10094;</button>
+        <button class="button next" onclick="changeSlide(1, this)">&#10095;</button>
+    </div>
+    <p class="villa-description o">
+        Biệt thự bốn phòng ngủ rộng 784m2 với hồ bơi riêng, có 3 giường cỡ King, sức chứa tối đa 10 người.
+        <p class="ok"><img src="https://www.shutterstock.com/image-vector/home-icon-vector-house-260nw-1276960063.jpg" alt="Icon" width="30" height="30">26m2</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEFhM2kGpiOiY7SXt6FpUf0B2Dlx26io_VFg&s=" alt="Icon" width="30" height="30">1 Giường cỡ Queen hay 2 Giường đơn</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHFeT36T6OH5HbcOfmvrBIu3-xRq7dZ8P0w&s"alt="Icon" width="30" height="30"> 
+            3 Tối Đa (2 Người Lớn & 1 Trẻ em)</p>
+    </p></p>
+</div>
+
+<!-- Biệt thự hồ bơi năm phòng ngủ -->
+<div class="villa">
+    <div class="villa-title">Biệt thự hồ bơi năm phòng ngủ</div>
+    <div class="slider" data-current-slide="0">
+        <div class="slides">
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Azerai-Pool-900x700-1.jpg" alt="Biệt thự 5 phòng ngủ ảnh 1"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Mekong-Villa-Four-Bedrooms.jpg" alt="Biệt thự 5 phòng ngủ ảnh 2"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Mekong-Villa-Private-Gym.jpg" alt="Biệt thự 5 phòng ngủ ảnh 3"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Mekong-Villa-Private-Spa.jpg" alt="Biệt thự 5 phòng ngủ ảnh 4"></div>
+            <div class="slide"><img src="https://cdn.shortpixel.ai/client/to_webp,w_1200,h_900,c_center,q_lossless,ret_wait/https://azerai.com/wp-content/uploads/2023/07/Large-JPG-AZCT-Mekong-Villa-Rooms-And-Water-Ponds-2.jpg" alt="Biệt thự 5 phòng ngủ ảnh 5"></div>
+        </div>
+        <button class="button prev" onclick="changeSlide(-1, this)">&#10094;</button>
+        <button class="button next" onclick="changeSlide(1, this)">&#10095;</button>
+    </div>
+    <p class="villa-description o">
+        Biệt thự năm phòng ngủ rộng 1.583m2 với hồ bơi riêng, có 5 giường cỡ King, sức chứa tối đa 14 người.
+        <p class="ok"><img src="https://www.shutterstock.com/image-vector/home-icon-vector-house-260nw-1276960063.jpg" alt="Icon" width="30" height="30">26m2</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEFhM2kGpiOiY7SXt6FpUf0B2Dlx26io_VFg&s=" alt="Icon" width="30" height="30">1 Giường cỡ Queen hay 2 Giường đơn</p>
+        <p class="ok"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHFeT36T6OH5HbcOfmvrBIu3-xRq7dZ8P0w&s"alt="Icon" width="30" height="30"> 
+            3 Tối Đa (2 Người Lớn & 1 Trẻ em)</p>
+    </p></p>
+</div>
+
+<script>
+    // Hàm chuyển slide theo hướng (1: tiến tới, -1: quay lại)
+    function changeSlide(slider, direction) {
+        const slides = slider.querySelector('.slides');
+        let currentSlide = parseInt(slider.dataset.currentSlide);
+        const totalSlides = slides.children.length;
+
+        // Xác định slide mới
+        let newSlide = currentSlide + direction;
+        if (newSlide < 0) {
+            newSlide = totalSlides - 1; // Vòng lại slide cuối nếu đang ở đầu
+        } else if (newSlide >= totalSlides) {
+            newSlide = 0; // Vòng lại slide đầu nếu đang ở cuối
+        }
+
+        // Cập nhật vị trí slide
+        slides.style.transform = `translateX(-${newSlide * 100}%)`;
+        slider.dataset.currentSlide = newSlide;
+    }
+
+    // Tự động chuyển slide và xử lý sự kiện nhấn nút cho mỗi slider
+    document.querySelectorAll('.slider').forEach(slider => {
+        slider.dataset.currentSlide = 0; // Khởi tạo thuộc tính `currentSlide`
+
+        // Tự động chuyển slide mỗi 4 giây
+        const autoSlide = setInterval(() => changeSlide(slider, 1), 4000);
+
+        // Sự kiện nhấn vào nút Previous và Next
+        slider.querySelector('.prev').addEventListener('click', () => {
+            clearInterval(autoSlide); // Dừng tự động chuyển khi người dùng can thiệp
+            changeSlide(slider, -1);
+        });
+        slider.querySelector('.next').addEventListener('click', () => {
+            clearInterval(autoSlide); // Dừng tự động chuyển khi người dùng can thiệp
+            changeSlide(slider, 1);
+        });
+    });
+    function openBooking() {
+    window.location.href = "datphongd.html"; // Thay đổi URL đến trang đặt phòng
+}
+
+// Tự động thêm lớp shake sau mỗi 4 giây
+setInterval(() => {
+    const icon = document.querySelector('.booking-icon');
+    icon.classList.add('shake');
+    
+    // Xóa lớp shake sau khi hiệu ứng kết thúc
+    setTimeout(() => {
+        icon.classList.remove('shake');
+    }, 500); // Thời gian khớp với thời gian hiệu ứng rung lắc
+}, 4000); // 4000ms = 4 giây
+
+function toggleChat() {
+  var chatbotBox = document.getElementById("chatbot-box");
+  if (chatbotBox.style.display === "none" || chatbotBox.style.display === "") {
+    chatbotBox.style.display = "flex";
+  } else {
+    chatbotBox.style.display = "none";
+  }
+}
+
+function sendMessage() {
+  var inputField = document.querySelector(".chat-input input");
+  var message = inputField.value;
+
+  if (message.trim() !== "") {
+    var chatBody = document.querySelector(".chat-body");
+    var userMessage = document.createElement("p");
+    userMessage.textContent = message;
+    userMessage.style.textAlign = "right"; // Căn phải cho tin nhắn của người dùng
+    chatBody.appendChild(userMessage);
+
+    inputField.value = ""; // Xóa nội dung trong ô nhập
+    chatBody.scrollTop = chatBody.scrollHeight; // Cuộn xuống dưới cùng
+  }
+}
+
+</script>
+<div class="chatbot-icon" onclick="toggleChat()">
+    💬
+  </div>
+  
+  <div id="chatbot-box" class="chatbot-box">
+    <div class="chat-header">
+      <span>Cskh</span>
+      <button onclick="toggleChat()">✖</button>
+    </div>
+    <div class="chat-body">
+      <p>Xin chào! Hãy nhắn tin cho chúng tôi.</p>
+      <!-- Tin nhắn sẽ hiển thị ở đây -->
+      <img src="data:image/png;base64,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" alt="Hình ảnh mô tả" class="chat-image">
+    </div>
+    <div class="chat-input">
+      <input type="text" placeholder="Nhập tin nhắn...">
+      <button onclick="sendMessage()">Gửi</button>
+    </div>
+  </div>
+  
+  <div class="booking-icon" onclick="openBooking()">
+    🛏️
+</div>
+
+
+
+
+
+
+  
+</body>
+</html>
